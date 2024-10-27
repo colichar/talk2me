@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const AudioUploader = () => {
+const AudioUploader = ({ onUploadSuccess }) => {
     const [file, setFile] = useState(null);
     const [status, setStatus] = useState('');
   
@@ -25,7 +25,9 @@ const AudioUploader = () => {
         });
   
         if (response.ok) {
-          setStatus('File uploaded successfully!');
+          const data = await response.json();
+          setStatus('File uploaded and processed successfully!');
+          onUploadSuccess(data.result)
         } else {
           setStatus('Upload failed. Please try again.');
         }
