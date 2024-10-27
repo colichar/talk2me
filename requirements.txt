@@ -1,0 +1,7 @@
+transformers
+torch
+librosa
+soundfile
+fastapi
+python-multipart
+uvicorn

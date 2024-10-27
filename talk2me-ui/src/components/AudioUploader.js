@@ -15,11 +15,12 @@ const AudioUploader = () => {
       }
   
       const formData = new FormData();
-      formData.append('audio', file);
+      formData.append('audio_file', file);
   
       try {
+        console.log(formData)
         setStatus('Uploading...');
-        const response = await fetch('http://your-api-url/upload', {
+        const response = await fetch('http://localhost:8000/upload', {
           method: 'POST',
           body: formData,
         });
