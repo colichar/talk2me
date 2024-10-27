@@ -18,7 +18,6 @@ const AudioUploader = () => {
       formData.append('audio_file', file);
   
       try {
-        console.log(formData)
         setStatus('Uploading...');
         const response = await fetch('http://localhost:8000/upload', {
           method: 'POST',
