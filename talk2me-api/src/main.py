@@ -1,9 +1,11 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import shutil
-import os
+from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
+import httpx
 
 app = FastAPI()
+
+SERVICE_URL = "http://localhost:8010/process"
 
 # Configure CORS
 app.add_middleware(
@@ -17,15 +19,35 @@ app.add_middleware(
 @app.post("/upload")
 async def upload_file(audio_file: UploadFile = File(...)):
     try:
-        os.makedirs("uploads", exist_ok=True)
-        
-        file_path = f"uploads/{audio_file.filename}"
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(audio_file.file, buffer)
-        
-        return {"filename": audio_file.filename, "message": "File uploaded successfully"}
+        content = await audio_file.read()
+
+        async with httpx.AsyncClient() as client:
+            files = {'file': (audio_file.filename, content, audio_file.content_type)}
+            response = await client.post(SERVICE_URL, files=files)
+
+        if response.status_code == 200:
+            processed_audio = response.json()
+            return {
+                "message": "File processed successfully",
+                "result": processed_audio
+            }
+        else:
+            raise HTTPException(
+                status_code=response.status_code,
+                detail="Processing service failed to process audio file."
+            )
+
+    except httpx.RequestError as e:
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error communicating with processing service: {stre(e)}"
+        )
+     
     except Exception as e:
-        return {"error": str(e)}
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occured: {str(e)}"
+        )
 
 if __name__ == "__main__":
     import uvicorn
