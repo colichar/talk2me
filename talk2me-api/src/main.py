@@ -5,7 +5,7 @@ import httpx
 
 app = FastAPI()
 
-SERVICE_URL = "http://localhost:8010/process"
+SERVICE_URL = "http://localhost:8010/transcribe"
 
 # Configure CORS
 app.add_middleware(
