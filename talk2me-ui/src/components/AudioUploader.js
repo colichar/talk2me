@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const AudioUploader = ({ onUploadSuccess }) => {
+const AudioUploader = ({ onUploadSuccess, operation }) => {
     const [file, setFile] = useState(null);
     const [status, setStatus] = useState('');
   
@@ -16,6 +16,7 @@ const AudioUploader = ({ onUploadSuccess }) => {
   
       const formData = new FormData();
       formData.append('audio_file', file);
+      formData.append('operation', operation)
   
       try {
         setStatus('Uploading...');

@@ -1,21 +1,36 @@
 import React, { useState } from 'react';
 import AudioUploader from './components/AudioUploader';
-import TranscriptionDisplay from './components/TranscriptionDisplay';
+import ResultDisplay from './components/ResultDisplay';
 import './styles/App.css';
 
 function App() {
-  const [transcription, setTranscription] = useState(null)
+  const [result, setResult] = useState(null)
+  const [activeTab, setActiveTab] = useState('transcribe');
 
-  const handleUploadSuccess = (result) => {
-    setTranscription(result.transcription);
+  const handleUploadSuccess = (processedResult) => {
+    setResult(processedResult);
   }
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Talk 2 Me</h1>
-        <AudioUploader onUploadSuccess={handleUploadSuccess}/>
-        <TranscriptionDisplay transcription={transcription}/>
+        <div className="tabs">
+          <button 
+            onClick={() => setActiveTab('transcribe')}
+            className={activeTab === 'transcribe' ? 'active' : ''}
+          >
+            Transcribe
+          </button>
+          <button 
+            onClick={() => setActiveTab('summarize')}
+            className={activeTab === 'summarize' ? 'active' : ''}
+          >
+            Summarize
+          </button>
+        </div>
+        <AudioUploader onUploadSuccess={handleUploadSuccess} operation={activeTab}/>
+        <ResultDisplay result={result} operation={activeTab}/>
       </header>
     </div>
   );
