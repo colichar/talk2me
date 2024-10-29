@@ -8,7 +8,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('transcribe');
 
   const handleUploadSuccess = (processedResult) => {
-    setResult(processedResult);
+    setResult(processedResult.result);
   }
 
   return (
