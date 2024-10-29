@@ -40,7 +40,7 @@ async def process_audio(file: UploadFile = File(...)):
     try:
         transcription = await transcribe_audio_file(file=file)
 
-        return {"transcription": transcription}
+        return {"result": transcription}
 
     except Exception as e:
         return {"error": str(e)}
@@ -50,7 +50,7 @@ async def process_audio(file: UploadFile = File(...)):
     try:
         summary = await summarize_audio_file(file=file)
 
-        return {"summary": summary}
+        return {"result": summary}
 
     except Exception as e:
         return {"error": str(e)}
