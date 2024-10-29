@@ -1,11 +1,11 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 import httpx
 
 app = FastAPI()
 
-SERVICE_URL = "http://localhost:8010/transcribe"
+SERVICE_URL = "http://localhost:8010/"
 
 # Configure CORS
 app.add_middleware(
@@ -17,13 +17,23 @@ app.add_middleware(
 )
 
 @app.post("/upload")
-async def upload_file(audio_file: UploadFile = File(...)):
+async def upload_file(audio_file: UploadFile = File(...), operation: str = Form(...)):
     try:
         content = await audio_file.read()
 
-        async with httpx.AsyncClient() as client:
-            files = {'file': (audio_file.filename, content, audio_file.content_type)}
-            response = await client.post(SERVICE_URL, files=files)
+        new_url = SERVICE_URL + operation
+
+        if operation == 'transcribe':
+            async with httpx.AsyncClient() as client:
+                files = {'file': (audio_file.filename, content, audio_file.content_type)}
+                response = await client.post(new_url, files=files)
+        elif operation == 'summarize':
+            async with httpx.AsyncClient() as client:
+                files = {'file': (audio_file.filename, content, audio_file.content_type)}
+                response = await client.post(new_url, files=files)
+
+        else:
+            raise HTTPException(status_code=400, detail='Invalid operation')
 
         if response.status_code == 200:
             processed_audio = response.json()
@@ -44,6 +54,7 @@ async def upload_file(audio_file: UploadFile = File(...)):
         )
      
     except Exception as e:
+        print(e)
         raise HTTPException(
             status_code=HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected error occured: {str(e)}"
