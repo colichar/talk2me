@@ -4,7 +4,7 @@ from handlers import transcribe_audio_file, summarize_audio_file
 api_router = APIRouter()
 
 @api_router.post("/transcribe")
-async def process_audio(file: UploadFile = File(...)):
+async def transcribe_audio(file: UploadFile = File(...)):
     try:
         transcription = await transcribe_audio_file(file=file)
 
@@ -14,7 +14,7 @@ async def process_audio(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=f"An unexpected error occured: {str(e)}")
 
 @api_router.post("/summarize")
-async def process_audio(file: UploadFile = File(...)):
+async def summarize_audio(file: UploadFile = File(...)):
     try:
         summary = await summarize_audio_file(file=file)
 

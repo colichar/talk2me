@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form
-from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
+from models import ProcessedAudioResponse
 import httpx
 
 api_router = APIRouter()
@@ -18,7 +18,7 @@ async def upload_file(audio_file: UploadFile = File(...), operation: str = Form(
                 files = {'file': (audio_file.filename, content, audio_file.content_type)}
                 response = await client.post(new_url, files=files)
         elif operation == 'summarize':
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(timeout=60) as client:
                 files = {'file': (audio_file.filename, content, audio_file.content_type)}
                 response = await client.post(new_url, files=files)
 
@@ -27,10 +27,10 @@ async def upload_file(audio_file: UploadFile = File(...), operation: str = Form(
 
         if response.status_code == 200:
             processed_audio = response.json()
-            return {
-                "message": "File processed successfully",
-                "result": processed_audio
-            }
+            return ProcessedAudioResponse(
+                message="File processed successfully",
+                result=processed_audio
+            )
         else:
             raise HTTPException(
                 status_code=response.status_code,
@@ -39,13 +39,12 @@ async def upload_file(audio_file: UploadFile = File(...), operation: str = Form(
 
     except httpx.RequestError as e:
         raise HTTPException(
-            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail=f"Error communicating with processing service: {str(e)}"
         )
      
     except Exception as e:
-        print(e)
         raise HTTPException(
-            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail=f"An unexpected error occured: {str(e)}"
         )

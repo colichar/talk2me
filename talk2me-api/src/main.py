@@ -4,8 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-app.include_router(api_router)
-
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
@@ -14,6 +12,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(api_router)
 
 if __name__ == "__main__":
     import uvicorn
