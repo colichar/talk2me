@@ -10,18 +10,30 @@ transcription_model.config.forced_decoder_ids = None
 # Initialize summarization model
 summarizer_model = pipeline("summarization", model="facebook/bart-large-cnn")
 
-async def transcribe_audio_file(file):
+async def transcribe_audio_file(file, chunk_duration=30):
     content = await file.read()
-
     audio_array, sampling_rate = sf.read(io.BytesIO(content))
 
-    input_features = transcription_processor(audio_array, sampling_rate=sampling_rate, return_tensors="pt").input_features 
+    chunk_size = int(chunk_duration * sampling_rate)
 
-    predicted_ids = transcription_model.generate(input_features)
+    transcriptions = []
 
-    transcription = transcription_processor.batch_decode(predicted_ids, skip_special_tokens=True)
+    for start in range(0, len(audio_array), chunk_size):
+        audio_chunk = audio_array[start:start + chunk_size]
+        
+        input_features = transcription_processor(
+            audio_chunk,
+            sampling_rate=sampling_rate,
+            return_tensors="pt"
+        ).input_features 
 
-    return transcription[0]
+        predicted_ids = transcription_model.generate(input_features)
+        chunk_transcription = transcription_processor.batch_decode(predicted_ids, skip_special_tokens=True)
+        transcriptions.append(chunk_transcription[0])
+
+    transcription = " ".join(transcriptions)
+
+    return transcription
 
 async def summarize_audio_file(file):
     transcription = await transcribe_audio_file(file=file)
