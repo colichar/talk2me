@@ -16,8 +16,10 @@ async def transcribe_audio(file: UploadFile = File(...)):
 @api_router.post("/summarize")
 async def summarize_audio(file: UploadFile = File(...)):
     try:
+        print('Summarizing audio file...')
         summary = await summarize_audio_file(file=file)
 
+        print('Returning summary...')
         return {"result": summary}
 
     except Exception as e:

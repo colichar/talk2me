@@ -14,7 +14,7 @@ async def upload_file(audio_file: UploadFile = File(...), operation: str = Form(
         new_url = SERVICE_URL + operation
 
         if operation == 'transcribe':
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(timeout=60) as client:
                 files = {'file': (audio_file.filename, content, audio_file.content_type)}
                 response = await client.post(new_url, files=files)
         elif operation == 'summarize':
