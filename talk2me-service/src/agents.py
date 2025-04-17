@@ -6,12 +6,14 @@ from langgraph.graph import StateGraph, END
 from typing import TypedDict
 
 load_dotenv()
-GOOGLE_API_KEY = os.getenv('GEMINI_API_KEY')
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+GOOGLE_LLM_MODEL = os.getenv('GOOGLE_LLM_MODEL', 'gemini-2.0-flash')
 
 class State(TypedDict):
     audio: bytes
     transcript: str
     summary: str
+    summarize: bool
 
 class TranSummAgent:
     def __init__(self):
@@ -21,7 +23,8 @@ class TranSummAgent:
     def __call__(self, state):
         return self.graph.invoke(state)
 
-    def transcribe_audio(self, state: State, model='gemini-2.0-flash'):
+    def transcribe_audio(self, state: State, model=GOOGLE_LLM_MODEL):
+        print(f'Transcribing the audio with {model}')
         response = self.client.models.generate_content(
             model=model,
             contents=[
@@ -39,10 +42,12 @@ class TranSummAgent:
 
         return {
             'transcript': response.text,
-            'audio': None
+            'audio': None,
+            'summarize': state['summarize']
         }
 
-    def summarize_text(self, state: State, model='gemini-2.0-flash'):
+    def summarize_text(self, state: State, model=GOOGLE_LLM_MODEL):
+        print(f'Summarizing the transcription with {model}')
         response = self.client.models.generate_content(
             model=model,
             contents=f'''Summarize the following transcription of the meeting:
@@ -62,6 +67,9 @@ class TranSummAgent:
         )
 
         return {'summary': response.text}
+
+    def _summarize_text_decision(self, state: State):
+        return 'summarize_text' if state['summarize'] else END
     
     def _init_client(self):
         return genai.Client(api_key=GOOGLE_API_KEY)
@@ -69,11 +77,11 @@ class TranSummAgent:
     def _build_graph(self):
         graph = StateGraph(State)
 
-        graph.add_node("transcribe", self.transcribe_audio)
-        graph.add_node("summarize", self.summarize_text)
+        graph.add_node("transcribe_audio", self.transcribe_audio)
+        graph.add_node("summarize_text", self.summarize_text)
 
-        graph.set_entry_point("transcribe")
-        graph.add_edge("transcribe", "summarize")
-        graph.add_edge("summarize", END)
+        graph.set_entry_point("transcribe_audio")
+        graph.add_conditional_edges("transcribe_audio", self._summarize_text_decision)
+        graph.add_edge("summarize_text", END)
 
         return graph.compile()

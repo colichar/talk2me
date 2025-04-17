@@ -1,14 +1,15 @@
 from fastapi import APIRouter, File, UploadFile, HTTPException
-from handlers import transcribe_audio_file, summarize_audio_file
+from handlers.v2.handlers import transcribe_summarize_agent
 
 api_router = APIRouter()
 
 @api_router.post("/transcribe")
 async def transcribe_audio(file: UploadFile = File(...)):
     try:
-        transcription = await transcribe_audio_file(file=file)
+        result = await transcribe_summarize_agent(file=file, summarize=None)
 
-        return {"result": transcription}
+        print('Returning transcription...')
+        return {"result": result['transcript']}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An unexpected error occured: {str(e)}")
@@ -16,11 +17,10 @@ async def transcribe_audio(file: UploadFile = File(...)):
 @api_router.post("/summarize")
 async def summarize_audio(file: UploadFile = File(...)):
     try:
-        print('Summarizing audio file...')
-        summary = await summarize_audio_file(file=file)
+        result = await transcribe_summarize_agent(file=file, summarize=True)
 
         print('Returning summary...')
-        return {"result": summary}
+        return {"result": result['summary']}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An unexpected error occured: {str(e)}")
