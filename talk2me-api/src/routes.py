@@ -1,10 +1,14 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 from models import ProcessedAudioResponse
 import httpx
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+SERVICE_URL = os.getenv('SERVICE_URL')
 
 api_router = APIRouter()
 
-SERVICE_URL = "http://localhost:8010/"
 
 @api_router.post("/upload")
 async def upload_file(audio_file: UploadFile = File(...), operation: str = Form(...)):
