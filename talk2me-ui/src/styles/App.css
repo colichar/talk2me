@@ -1,3 +1,34 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.home-page h1 {
+  font-size: 2.5rem;
+  color: #151B54;
+}
+.home-page p {
+  font-size: 1.2rem;
+  color: #79BAEC;
+}
+.home-page button {
+  background-color: #2885cc;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+.home-page button:hover {
+  background-color: #1a6f9c;
+}
+
 .App {
   text-align: center;
 }
