@@ -1,51 +1,26 @@
-.home-page {
+.centered-container {
+  background-color: #fffbf8;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
+  text-align: center;
 }
-.home-page h1 {
+.heading-primary {
   font-size: 2.5rem;
   color: #151B54;
 }
-.home-page p {
+.text-secondary {
   font-size: 1.2rem;
   color: #79BAEC;
 }
-.home-page button {
-  background-color: #2885cc;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-}
-.home-page button:hover {
-  background-color: #1a6f9c;
-}
 
-.App {
-  text-align: center;
-}
-
-.App-header {
-  background-color: #151B54;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: #79BAEC;
-}
-
-input[type="file"] {
-  margin: 10px 0;
+.logo {
+  width: 350px;
+  height: auto;
+  margin-bottom: 0px;
+  pointer-events: none;
 }
 
 button {
@@ -59,6 +34,10 @@ button {
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
+}
+
+button:hover {
+  background-color: #1a6f9c;
 }
 
 .tabs {
@@ -78,4 +57,17 @@ button {
 .tabs button.active {
   background-color: #2885cc;
   color: white;
+}
+
+.home-page .navigation-options{
+  margin-top: 20px;
+}
+
+.App-header {
+  font-size: calc(10px + 2vmin);
+  color: #79BAEC;
+}
+
+input[type="file"] {
+  margin: 10px 0;
 }
