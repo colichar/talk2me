@@ -1,0 +1,66 @@
+.audio-recorder {
+    text-align: center;
+}
+
+.recording-button {
+    background-color: #2885cc;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 100%;
+    height: 50px;
+}
+
+.recording-button:hover {
+    background-color: #1a6f9c;
+}
+
+.stop-recording{
+    background-color: #FF4C4C;
+}
+
+.stop-recording:hover{
+    background-color: #bd3434;
+}
+
+.recording-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sound-waves {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.sound-waves span {
+    display: inline-block;
+    width: 8px;
+    height: 20px;
+    margin: 0 4px;
+    background-color: #79BAEC;
+    animation: wave 1.2 s infinite ease-in-out;
+}
+
+.sound-waves span:nth-child(2) {
+    animation-delay: -1.1s;
+}
+
+.sound-waves span:nth-child(3) {
+    animation-delay: -1.0s;
+}
+
+@keyframes wave {
+    0%, 100%{
+        transform: scaleY(0.5);
+    }
+    50% {
+        transform: scaleY(1.5);
+    }
+    
+}
