@@ -1,12 +1,14 @@
-transformers
-torch
-librosa
-soundfile
-fastapi
-python-multipart
-httpx
-uvicorn
-python-dotenv
-langgraph
-langchain
-google-genai
+dotenv==0.9.9
+httpx==0.28.1
+fastapi==0.115.12
+python-multipart==0.0.20
+uvicorn==0.34.2
+google-genai==1.14.0
+langgraph==0.4.3
+
+# for v1 service handlers -- self-hosted models
+# transformers
+# torch
+# librosa
+# soundfile
+# python-dotenv
