@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const AudioUploader = ({ onUploadSuccess, operation }) => {
     const [file, setFile] = useState(null);
     const [status, setStatus] = useState('');
+    const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
   
     const handleFileChange = (event) => {
       setFile(event.target.files[0]);
@@ -20,7 +21,7 @@ const AudioUploader = ({ onUploadSuccess, operation }) => {
   
       try {
         setStatus('Uploading...');
-        const response = await fetch('http://localhost:8000/upload', {
+        const response = await fetch(''.concat(REACT_APP_API_URL, 'upload'), {
           method: 'POST',
           body: formData,
         });
@@ -40,7 +41,7 @@ const AudioUploader = ({ onUploadSuccess, operation }) => {
   
     return (
       <div>
-        <h2>Audio File Upload</h2>
+        <p className="heading-secondary">Audio File Upload</p>
         <input type="file" accept="audio/*" onChange={handleFileChange} />
         <button onClick={handleUpload}>Upload</button>
         <p>{status}</p>
