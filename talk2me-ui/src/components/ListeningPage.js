@@ -3,7 +3,7 @@ import AudioUploader from './AudioUploader';
 import ResultDisplay from './ResultDisplay';
 import AudioRecorder from './AudioRecorder';
 import '../styles/App.css';
-import logo from "../assets/logo_listening.png";
+import logo from "../assets/logo_listening.svg";
 
 const ListeningPage = () => {
   const [result, setResult] = useState(null)
