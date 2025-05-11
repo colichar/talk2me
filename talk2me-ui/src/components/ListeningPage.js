@@ -3,7 +3,7 @@ import AudioUploader from './AudioUploader';
 import ResultDisplay from './ResultDisplay';
 import AudioRecorder from './AudioRecorder';
 import '../styles/App.css';
-import logo from "../assets/logo_listening.svg";
+import { ReactComponent as Logo } from '../assets/logo_listening.svg';
 
 const ListeningPage = () => {
   const [result, setResult] = useState(null)
@@ -20,7 +20,7 @@ const ListeningPage = () => {
   return (
     <div className="centered-container App">
       <header className="App-header">
-        <img src={logo} alt="Listening Logo" className="logo" loading="lazy" />
+        <Logo style={{ width: '50%', height: 'auto' }}/>
         <h1 className="heading-primary">Talk 2 Me</h1>
         <div className="tabs">
           <button 

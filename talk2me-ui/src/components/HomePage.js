@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/logo_homepage.svg";
+import { ReactComponent as Logo } from '../assets/logo_homepage.svg';
 
 const HomePage = () => {
     return (
         <div className="centered-container home-page">
-            <img src={logo} alt="Talk 2 Me Logo" className="logo" loading="lazy" />
+            <Logo style={{ width: '15%', height: 'auto' }} />
             <h1 className="heading-primary">Welcome to Talk 2 Me</h1>
             <p className="text-secondary">Your personal project assistant. How may I help you?</p>
             <div className="navigation-options">
